@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>After School Lessons</title>
+    <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script>
+    <script src="subjects.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-custom">
+                <div class="container">
+                    <a class="navbar-brand">
+                        <h3 v-text="sitename"></h3>
+                    </a>
+                </div>
+            </nav>
+        </header>
+        <main>
+            <div class="container">
+                    <div class="container-fluid  my-4 p-3" style="position: relative;">
+                        <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-lg-3 g-3">
+                            <div class="col" v-for="subject in subjects">
+                                <div class="card h-100 shadow-sm">
+                                    <figure>
+                                        <img class="card-img" v-bind:src="subject.image" width="200" height="200">
+                                    </figure>
+                                    <div class="card-body">
+                                        <h2 v-text="subject.title"></h2>
+                                        <p v-html="subject.description"></p>
+                                        <ul>
+                                            <li><strong>Location: </strong> {{ subject.location }}</li>
+                                            <li><strong>Timings: </strong> {{ subject.timings }}</li>
+                                            <li><strong>Price: </strong>AED {{subject.price}}</li>
+                                            <li><strong>Spaces: </strong>{{ subject.availableSpace }}</li>
+                                        </ul>                                 
+                                        <div>
+                                            <span v-for="n in subject.rating">★</span>
+                                            <span v-for="n in 5- subject.rating">☆</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </main>
+    </div>
+    <script type="text/javascript">
+        var webstore = new Vue({
+            el: '#app',
+            data: {
+                sitename: 'After School Classes',
+                subjects: subjects,
+            }
+        });
+    </script>
+</body>
+</html>
