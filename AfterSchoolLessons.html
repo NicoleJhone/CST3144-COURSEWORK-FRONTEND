@@ -89,7 +89,29 @@
                 <div v-else>
                     <h2>Checkout</h2>
                     <div>
-                        Cart
+                     
+                        <div class="container-fluid  my-4 p-3" style="position: relative;">
+                            <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-lg-3 g-3">
+
+                                <div class="col" v-for="(item, i) in cart" :key="i">
+                                    <div class="card h-100 shadow-sm">
+                                        <figure>
+                                            <img class="card-img" v-bind:src="item.image" width="200" height="200">
+                                        </figure>
+                                        <div class="card-body">
+                                            <h2>{{ item.title }}</h2>
+                                            <ul>
+                                                <li><strong>Location: </strong> {{ item.location }}</li>
+                                                <li><strong>Timings: </strong> {{ item.timings }}</li>
+                                                <li><strong>Price: </strong>AED {{item.price}}</li>
+                                            </ul>
+                                            <button class="btn btn-danger" @click="removeFromCart(i)">Remove</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
