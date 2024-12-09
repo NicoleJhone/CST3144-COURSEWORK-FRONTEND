@@ -93,7 +93,7 @@
                         <p><strong>Last Name:</strong><br><input v-model="order.lastName" /></p>
                         <p><strong>Address: </strong><br><input v-model="order.address" /></p>
                         <p><strong>Phone Number: </strong><br><input v-model="order.phoneNumber" /></p>
-                        <button v-on:click="saveOrder" :disabled="!isFormValid()">Checkout</button>
+                        <button v-on:click="saveOrder" :disabled="!isFormValid">Checkout</button>
                     </div>
                     <div>
                      
