@@ -2,7 +2,7 @@ var webstore = new Vue({
   el: "#app",
   data: {
     sitename: "After School Classes",
-    subjects: subjects,
+    subjects: [],
     showsubject: true,
     sortBy: "subject",
     ascending: true,
@@ -16,6 +16,16 @@ var webstore = new Vue({
       lessonID: "",
     },
     searchValue: "",
+  },
+  created: function () {
+    console.log("requesting data from server ...");
+
+    fetch("http://localhost:3000/collection/lessons").then(function (response) {
+      response.json().then(function (json) {
+        webstore.subjects = json;
+        console.log(json);
+      });
+    });
   },
   methods: {
     // add to cart button
@@ -67,6 +77,28 @@ var webstore = new Vue({
     //checkout functionality
     saveOrder() {
       if (this.isFormValid() && this.order.address) {
+        const newProduct = {
+          firstName: this.order.firstName,
+          lastName: this.order.lastName,
+          phoneNumber: this.order.phoneNumber,
+          lessonID: this.cart,
+          space: this.cart.length,
+        };
+        fetch("http://localhost:3000/collection/orders", {
+          method: "POST", // set the HTTP method as 'POST'
+          headers: {
+            "Content-Type": "application/json", // set the data type as JSON
+          },
+          body: JSON.stringify(newProduct), // need to stringify the JSON object
+        })
+          .then((response) => response.json())
+          .then((responseJSON) => {
+            document.getElementById("response").innerText =
+              JSON.stringify(responseJSON);
+          })
+          .catch((error) => {
+            document.getElementById("error").innerText = error;
+          });
         //clear form fields
         this.order.firstName = "";
         this.order.lastName = "";
