@@ -18,7 +18,6 @@ var webstore = new Vue({
     canAddToCart(subject) {
       return subject.availableSpace > this.cartCount(subject);
     },
-
     // checkout/lesson toggle
     showCart() {
       this.showsubject = !this.showsubject;
@@ -32,6 +31,13 @@ var webstore = new Vue({
         }
       }
       return count;
+    },
+    // remove subject from cart
+    removeFromCart(index) {
+        this.cart.splice(index, 1);
+        if (this.cart.length === 0) {
+            this.showsubject = true;
+        }
     }
   },
   computed: {
