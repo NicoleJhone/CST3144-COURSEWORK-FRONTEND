@@ -8,6 +8,13 @@ var webstore = new Vue({
     ascending: true,
     searchValue: "",
     cart: [],
+    order: {
+      firstName: "",
+      lastName: "",
+      address: "",
+      phoneNumber: "",
+      lessonID: "",
+    },
   },
   methods: {
     // add to cart button
@@ -34,11 +41,46 @@ var webstore = new Vue({
     },
     // remove subject from cart
     removeFromCart(index) {
-        this.cart.splice(index, 1);
+      this.cart.splice(index, 1);
+      if (this.cart.length === 0) {
+        this.showsubject = true;
+      }
+    },
+    // Validate name (letters only)
+    validateName(name) {
+      const nameRegex = /^[A-Za-z]+$/;
+      return nameRegex.test(name);
+    },
+    // Validate phone number (numbers only)
+    validatePhoneNumber(phoneNumber) {
+      const phoneRegex = /^[0-9]+$/;
+      return phoneRegex.test(phoneNumber);
+    },
+    // Check if the form is valid
+    isFormValid() {
+      return (
+        this.validateName(this.order.firstName && this.order.lastName) &&
+        this.validatePhoneNumber(this.order.phoneNumber)
+      );
+    },
+    //checkout functionality
+    saveOrder() {
+      if (this.isFormValid() && this.order.address) {
+        //clear form fields
+        this.order.firstName = "";
+        this.order.lastName = "";
+        this.order.phoneNumber = "";
+        this.order.address = "";
+        //clear cart
+        this.cart = [];
         if (this.cart.length === 0) {
-            this.showsubject = true;
+          this.showsubject = true;
         }
-    }
+        alert("Order has been submitted!");
+      } else {
+        alert("Missing fields");
+      }
+    },
   },
   computed: {
     sortedSubjects() {

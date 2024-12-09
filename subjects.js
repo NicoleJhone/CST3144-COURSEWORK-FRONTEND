@@ -121,17 +121,6 @@ let subjects = [
         "rating": 5
     },
     {
-        "id": 1012,
-        "title": "Basketball",
-        "description": "Fulfill the demands of all aspiring young basketball players. Our basketball programs are year-round and designed to flow with age, talent, and commitment level.",
-        "location": "Rendevous, Dubai",
-        "timings": '8:00 am- 11:00 pm',
-        "price": 250.00,
-        "image": "images/basketball.png",
-        "availableSpace":13,
-        "rating": 5
-    },
-    {
         "id": 1013,
         "title": "Basketball",
         "description": "Fulfill the demands of all aspiring young basketball players. Our basketball programs are year-round and designed to flow with age, talent, and commitment level.",
@@ -149,7 +138,7 @@ let subjects = [
         "location": "Louvre, Abu Dhabi",
         "timings": '8:00 am- 11:00 pm',
         "price": 250.00,
-        "image": "images/basketball.png",
+        "image": "images/basketball1.png",
         "availableSpace":13,
         "rating": 5
     },
@@ -160,7 +149,7 @@ let subjects = [
         "location": "Warner Bros. World, Abu Dhabi",
         "timings": '8:00 am- 11:00 pm',
         "price": 250.00,
-        "image": "images/dance.png",
+        "image": "images/dance1.png",
         "availableSpace":13,
         "rating": 5
     },
