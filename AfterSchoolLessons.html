@@ -9,6 +9,9 @@
     <script src="subjects.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
@@ -24,16 +27,29 @@
         </header>
         <main>
             <div class="container">
+                <div id="sort-bar">
+                    <select name="sortBy" id="select" v-model="sortBy">
+                        <option value="subject">Subject</option>
+                        <option value="location">Location</option>
+                        <option value="price">Price</option>
+                        <option value="availability">Availability</option>
+                    </select>
+                    <button v-on:click="ascending = !ascending" class="sort-button">
+                        <i v-if="ascending" class="fa fa-sort-up"></i>
+                        <i v-else class="fa fa-sort-down"></i>
+                    </button>
+
+                </div>
+
                     <div class="container-fluid  my-4 p-3" style="position: relative;">
                         <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-lg-3 g-3">
-                            <div class="col" v-for="subject in subjects">
+                            <div class="col" v-for="subject in sortedSubjects" :key="subject">
                                 <div class="card h-100 shadow-sm">
                                     <figure>
                                         <img class="card-img" v-bind:src="subject.image" width="200" height="200">
                                     </figure>
                                     <div class="card-body">
                                         <h2 v-text="subject.title"></h2>
-                                        <p v-html="subject.description"></p>
                                         <ul>
                                             <li><strong>Location: </strong> {{ subject.location }}</li>
                                             <li><strong>Timings: </strong> {{ subject.timings }}</li>
