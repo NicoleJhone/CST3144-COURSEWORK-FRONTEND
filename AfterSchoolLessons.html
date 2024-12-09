@@ -54,6 +54,8 @@
                             <i v-if="ascending" class="fa fa-sort-up"></i>
                             <i v-else class="fa fa-sort-down"></i>
                         </button>
+                        <input type="text" v-model="searchValue" placeholder="Search.." id="search-input"></input>
+                        <i class="fa fa-search"></i>
                     </div>
                     <div class="container-fluid  my-4 p-3" style="position: relative;">
                         <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-lg-3 g-3">

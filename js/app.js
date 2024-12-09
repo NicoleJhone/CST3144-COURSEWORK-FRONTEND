@@ -15,6 +15,7 @@ var webstore = new Vue({
       phoneNumber: "",
       lessonID: "",
     },
+    searchValue: "",
   },
   methods: {
     // add to cart button
@@ -85,6 +86,28 @@ var webstore = new Vue({
   computed: {
     sortedSubjects() {
       let subjectsArray = this.subjects;
+
+      //search filter
+      if (this.searchValue != "" && this.searchValue) {
+        subjectsArray = subjectsArray.filter((subject) => {
+          return (
+            subject.title
+              .toUpperCase()
+              .includes(this.searchValue.toUpperCase()) ||
+            subject.location
+              .toUpperCase()
+              .includes(this.searchValue.toUpperCase()) ||
+            subject.price
+              .toString()
+              .toLowerCase()
+              .includes(this.searchValue.toLowerCase()) ||
+            subject.availableSpace
+              .toString()
+              .toLowerCase()
+              .includes(this.searchValue.toLowerCase())
+          );
+        });
+      }
 
       // sort by subjects
       subjectsArray = subjectsArray.sort((a, b) => {
