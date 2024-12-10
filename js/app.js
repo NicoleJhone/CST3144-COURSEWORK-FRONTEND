@@ -20,7 +20,7 @@ var webstore = new Vue({
   created: function () {
     console.log("requesting data from server ...");
 
-    fetch("http://localhost:3000/collection/lessons").then(function (response) {
+    fetch("https://cst3144-coursework-express-js.onrender.com/collection/lessons").then(function (response) {
       response.json().then(function (json) {
         webstore.subjects = json;
         console.log(json);
