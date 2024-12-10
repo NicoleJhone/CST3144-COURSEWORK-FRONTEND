@@ -84,7 +84,7 @@ var webstore = new Vue({
           lessonID: this.cart,
           space: this.cart.length,
         };
-        fetch("http://localhost:3000/collection/orders", {
+        fetch("https://cst3144-coursework-express-js.onrender.com/collection/orders", {
           method: "POST", // set the HTTP method as 'POST'
           headers: {
             "Content-Type": "application/json", // set the data type as JSON
