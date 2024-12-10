@@ -41,7 +41,7 @@
                             <option value="location">Location</option>
                             <option value="price">Price</option>
                             <option value="availability">Availability</option>
-                        </select> <button v-on:click="ascending = !ascending" class="sort-button me-2"> <i
+                        </select> <button @click="ascending = !ascending" class="sort-button me-2"> <i
                                 v-if="ascending" class="fa fa-sort-up"></i> <i v-else class="fa fa-sort-down"></i>
                         </button> <input class="form-control search-input" type="text" v-model="searchValue"
                             placeholder="Search.." id="search-input"></input> </div>
@@ -67,7 +67,7 @@
                                                 v-for="n in subject.rating" :key="n">★</span> <span
                                                 v-for="n in (5 - subject.rating)" :key="n + 5">☆</span> </div>
                                         <div class="d-flex justify-content-center mt-2"> <button class="btn btn-primary"
-                                                v-on:click="addToCart(subject)"
+                                                @click="addToCart(subject)"
                                                 v-if="canAddToCart(subject) && subject.availableSpace > 0">Add to
                                                 cart</button> <button class="btn btn-primary" disabled="disabled"
                                                 v-else>Add to cart</button> </div>
@@ -121,7 +121,7 @@
                                             v-model="order.address" /></p>
                                     <p><strong>Phone Number: </strong><br><input class="form-control search-input"
                                             v-model="order.phoneNumber" /></p> <button class="btn btn-success"
-                                        v-on:click="saveOrder" :disabled="!isFormValid()">Checkout</button>
+                                        @click="saveOrder" :disabled="!isFormValid()">Checkout</button>
                                 </div>
                             </div>
                         </div>
