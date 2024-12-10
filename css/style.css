@@ -3,7 +3,7 @@
 #app {
     font-family: 'Poppins', sans-serif; /* Using Poppins font family */
     text-rendering: optimizeLegibility !important; /* Optimizing text rendering */
-    background: #f3f3f5; /* Setting background color */
+    background: #87CEEB; /* Setting background color */
 }
 /* Preventing horizontal overflow */
 body, html {
