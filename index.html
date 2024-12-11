@@ -33,17 +33,21 @@
         </header>
         <main>
             <div class="container">
-                <div v-if="showsubject">
+                <div v-if="showsubject"> 
                     <div class="col-sm-4 d-flex p-3" id="sort-bar"> <select name="sortBy" id="select" v-model="sortBy"
                             class="me-2">
                             <option value="subject">Subject</option>
                             <option value="location">Location</option>
                             <option value="price">Price</option>
                             <option value="availability">Availability</option>
-                        </select> <button @click="ascending = !ascending" class="sort-button me-2"> <i v-if="ascending"
+                        </select> 
+                        <button @click="ascending = !ascending" class="sort-button me-2"> <i v-if="ascending"
                                 class="fa fa-sort-up"></i> <i v-else class="fa fa-sort-down"></i>
-                        </button> <input class="form-control search-input" type="text" v-model="searchValue"
-                            placeholder="Search.." id="search-input"></input> </div>
+                        </button> 
+                        
+                        <input class="form-control search-input" type="text" v-model="searchValue"
+                            placeholder="Search.." @input="searchLessons" id="search-input"></input>
+                    </div>
                     <div class="container-fluid p-3" style="position: relative;">
                         <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-lg-3 g-3">
                             <div class="col" v-for="subject in sortedSubjects" :key="subject">
@@ -76,7 +80,7 @@
                         </div>
                     </div>
                 </div>
-            
+
                 <div class="container my-5" v-else>
                     <div class="row pb-5">
                         <h1 class="text-center mb-5">Shopping Cart</h1>
@@ -98,8 +102,8 @@
                                                                 item.timings }}</li>
                                                             <li class="fixed-height"><strong>Price: </strong>AED
                                                                 {{item.price}}</li>
-                                                                <li class="fixed-height"><strong>Quantity: </strong>{{ item.quantity }}</li>
-
+                                                            <li class="fixed-height"><strong>Quantity: </strong>{{
+                                                                item.quantity }}</li>
                                                         </ul>
                                                         <div class="d-flex justify-content-center mt-auto"> <button
                                                                 class="btn btn-danger"

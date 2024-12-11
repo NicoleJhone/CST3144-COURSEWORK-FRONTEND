@@ -38,7 +38,7 @@ var webstore = new Vue({
         alert("No more space available for this lesson.");
       }
     },
-    
+
     //if condition for ATC button
     canAddToCart(subject) {
       const count = this.getCartItemCount(subject);
@@ -97,23 +97,26 @@ var webstore = new Vue({
           lessonID: this.cart,
           space: this.cart.length,
         };
-    
+
         console.log("Submitting order:", newProduct);
-    
-        fetch("https://cst3144-coursework-express-js.onrender.com/collection/orders", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newProduct),
-        })
+
+        fetch(
+          "https://cst3144-coursework-express-js.onrender.com/collection/orders",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newProduct),
+          }
+        )
           .then((response) => response.json())
           .then((responseJSON) => {
             console.log("Order response:", responseJSON);
-    
+
             // Update available lesson space
             this.cart.forEach((item) => {
-              const quantity = this.getCartItemCount(item); // 
+              const quantity = this.getCartItemCount(item); //
               fetch(
                 "https://cst3144-coursework-express-js.onrender.com/collection/lessons/" +
                   item._id,
@@ -123,19 +126,25 @@ var webstore = new Vue({
                     "Content-Type": "application/json",
                   },
                   body: JSON.stringify({
-                    availableSpace: item.availableSpace - quantity, 
+                    availableSpace: item.availableSpace - quantity,
                   }),
                 }
               )
                 .then((response) => response.json())
                 .then((responseJSON) => {
-                  console.log("Lesson " + item.title + " updated:", responseJSON);
+                  console.log(
+                    "Lesson " + item.title + " updated:",
+                    responseJSON
+                  );
                 })
                 .catch((error) => {
-                  console.error("Error updating lesson " + item._id + ":", error);
+                  console.error(
+                    "Error updating lesson " + item._id + ":",
+                    error
+                  );
                 });
             });
-    
+
             alert("Order has been submitted!");
             this.order.firstName = "";
             this.order.lastName = "";
@@ -151,35 +160,34 @@ var webstore = new Vue({
       } else {
         alert("Missing fields");
       }
+    },
+    searchLessons() {
+      // If the search term is empty, don't fetch any results
+      if (this.searchValue.trim() === "") {
+        this.subjects = [];  // Clear results
+        return;
+      }
+  
+      // Construct the search URL with query parameters
+      let url = `https://cst3144-coursework-express-js.onrender.com/search?q=${this.searchValue}`;
+  
+      // Add sorting and other filters if present
+      if (this.sortBy) url += `&sortBy=${this.sortBy}`;
+      if (!this.ascending) url += `&ascending=false`;
+  
+      // Fetch data from the backend API
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          this.subjects = data; // Update the lessons with the search results
+        })
+        .catch(error => console.error("Error:", error));
     }
-    
   
   },
   computed: {
     sortedSubjects() {
       let subjectsArray = this.subjects;
-
-      //search filter
-      if (this.searchValue != "" && this.searchValue) {
-        subjectsArray = subjectsArray.filter((subject) => {
-          return (
-            subject.title
-              .toUpperCase()
-              .includes(this.searchValue.toUpperCase()) ||
-            subject.location
-              .toUpperCase()
-              .includes(this.searchValue.toUpperCase()) ||
-            subject.price
-              .toString()
-              .toLowerCase()
-              .includes(this.searchValue.toLowerCase()) ||
-            subject.availableSpace
-              .toString()
-              .toLowerCase()
-              .includes(this.searchValue.toLowerCase())
-          );
-        });
-      }
 
       // sort by subjects
       subjectsArray = subjectsArray.sort((a, b) => {
