@@ -113,7 +113,7 @@ var webstore = new Vue({
                       },
                       body: JSON.stringify({
                           availableSpace: item.availableSpace - 1,
-                      }), // Assuming you want to decrement the space by 1
+                      }), 
                   })
                   .then((response) => response.json())
                   .then((responseJSON) => {
