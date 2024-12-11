@@ -40,8 +40,8 @@
                             <option value="location">Location</option>
                             <option value="price">Price</option>
                             <option value="availability">Availability</option>
-                        </select> <button @click="ascending = !ascending" class="sort-button me-2"> <i
-                                v-if="ascending" class="fa fa-sort-up"></i> <i v-else class="fa fa-sort-down"></i>
+                        </select> <button @click="ascending = !ascending" class="sort-button me-2"> <i v-if="ascending"
+                                class="fa fa-sort-up"></i> <i v-else class="fa fa-sort-down"></i>
                         </button> <input class="form-control search-input" type="text" v-model="searchValue"
                             placeholder="Search.." id="search-input"></input> </div>
                     <div class="container-fluid p-3" style="position: relative;">
@@ -116,7 +116,6 @@
                                             v-model.trim="order.firstName" /></p>
                                     <p><strong>Last Name:</strong><br><input class="form-control search-input"
                                             v-model="order.lastName" /></p>
-                          
                                     <p><strong>Phone Number: </strong><br><input class="form-control search-input"
                                             v-model="order.phoneNumber" /></p> <button class="btn btn-success"
                                         @click="saveOrder" :disabled="!isFormValid()">Checkout</button>
