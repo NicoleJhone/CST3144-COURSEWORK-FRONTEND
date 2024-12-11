@@ -100,15 +100,15 @@ var webstore = new Vue({
             document.getElementById("error").innerText = error;
           });
         //clear form fields
-        this.order.firstName = "";
-        this.order.lastName = "";
-        this.order.phoneNumber = "";
-        this.order.address = "";
+        // this.order.firstName = "";
+        // this.order.lastName = "";
+        // this.order.phoneNumber = "";
+        // this.order.address = "";
         //clear cart
-        this.cart = [];
-        if (this.cart.length === 0) {
-          this.showsubject = true;
-        }
+        // this.cart = [];
+        // if (this.cart.length === 0) {
+        //   this.showsubject = true;
+        // }
         alert("Order has been submitted!");
       } else {
         alert("Missing fields");
