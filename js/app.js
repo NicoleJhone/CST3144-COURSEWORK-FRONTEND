@@ -72,10 +72,12 @@ var webstore = new Vue({
     // Check if the form is valid
     isFormValid() {
       return (
-        this.validateName(this.order.firstName && this.order.lastName) &&
+        this.validateName(this.order.firstName) &&
+        this.validateName(this.order.lastName) &&
         this.validatePhoneNumber(this.order.phoneNumber)
       );
     },
+
     //checkout functionality
     saveOrder() {
       if (this.isFormValid()) {
