@@ -80,6 +80,7 @@ var webstore = new Vue({
 
     //checkout functionality
     saveOrder() {
+      //checks if form is valid
       if (this.isFormValid()) {
           const newProduct = {
               firstName: this.order.firstName,
