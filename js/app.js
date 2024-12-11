@@ -32,15 +32,24 @@ var webstore = new Vue({
   methods: {
     // add to cart button
     addToCart(subject) {
-      this.cart.push(subject);
+      if (this.canAddToCart(subject)) {
+        this.cart.push(subject);
+      } else {
+        alert("No more space available for this lesson.");
+      }
     },
+    
     //if condition for ATC button
     canAddToCart(subject) {
-      return subject.availableSpace > this.cartCount(subject);
+      const count = this.getCartItemCount(subject);
+      return subject.availableSpace > count;
     },
     // checkout/lesson toggle
     showCart() {
       this.showsubject = !this.showsubject;
+    },
+    getCartItemCount(subject) {
+      return this.cart.filter((item) => item._id === subject._id).length;
     },
     // cart length count
     cartCount(id) {
@@ -81,75 +90,69 @@ var webstore = new Vue({
     //checkout functionality
     saveOrder() {
       if (this.isFormValid()) {
-          const newProduct = {
-              firstName: this.order.firstName,
-              lastName: this.order.lastName,
-              phoneNumber: this.order.phoneNumber,
-              lessonID: this.cart,
-              space: this.cart.length,
-          };
-  
-          console.log("Submitting order:", newProduct);
-  
-          fetch("https://cst3144-coursework-express-js.onrender.com/collection/orders", {
-              method: "POST", // set the HTTP method as 'POST'
-              headers: {
-                  "Content-Type": "application/json", // set the data type as JSON
-              },
-              body: JSON.stringify(newProduct), // need to stringify the JSON object
-          })
+        const newProduct = {
+          firstName: this.order.firstName,
+          lastName: this.order.lastName,
+          phoneNumber: this.order.phoneNumber,
+          lessonID: this.cart,
+          space: this.cart.length,
+        };
+    
+        console.log("Submitting order:", newProduct);
+    
+        fetch("https://cst3144-coursework-express-js.onrender.com/collection/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newProduct),
+        })
           .then((response) => response.json())
           .then((responseJSON) => {
-              console.log("Order response:", responseJSON);
-  
-              // counts the quantity of each item in the cart
-              const itemCounts = this.cart.reduce((acc, item) => {
-                  acc[item._id] = (acc[item._id] || 0) + 1;
-                  return acc;
-              }, {});
-  
-              // update available lesson space based on quantity
-              Object.keys(itemCounts).forEach((itemId) => {
-                  const item = this.cart.find((i) => i._id === itemId);
-                  const quantity = itemCounts[itemId];
-                  console.log("Updating lesson:", item._id, "Quantity:", quantity);
-  
-                  fetch("https://cst3144-coursework-express-js.onrender.com/collection/lessons/" + item._id, {
-                      method: "PUT", // set the HTTP method as 'PUT'
-                      headers: {
-                          "Content-Type": "application/json", // set the data type as JSON
-                      },
-                      body: JSON.stringify({
-                          availableSpace: item.availableSpace - quantity,
-                      }),
-                  })
-                  .then((response) => response.json())
-                  .then((responseJSON) => {
-                      console.log("Lesson " + item.title + " updated:", responseJSON);
-                  })
-                  .catch((error) => {
-                      console.error("Error updating lesson " + item._id + ":", error);
-                  });
-              });
-  
-              alert("Order has been submitted!");
-              // Clear form fields
-              this.order.firstName = "";
-              this.order.lastName = "";
-              this.order.phoneNumber = "";
-              // Clear cart
-              this.cart = [];
-              if (this.cart.length === 0) {
-                  this.showsubject = true;
-              }
+            console.log("Order response:", responseJSON);
+    
+            // Update available lesson space
+            this.cart.forEach((item) => {
+              const quantity = this.getCartItemCount(item); // 
+              fetch(
+                "https://cst3144-coursework-express-js.onrender.com/collection/lessons/" +
+                  item._id,
+                {
+                  method: "PUT",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    availableSpace: item.availableSpace - quantity, 
+                  }),
+                }
+              )
+                .then((response) => response.json())
+                .then((responseJSON) => {
+                  console.log("Lesson " + item.title + " updated:", responseJSON);
+                })
+                .catch((error) => {
+                  console.error("Error updating lesson " + item._id + ":", error);
+                });
+            });
+    
+            alert("Order has been submitted!");
+            this.order.firstName = "";
+            this.order.lastName = "";
+            this.order.phoneNumber = "";
+            this.cart = [];
+            if (this.cart.length === 0) {
+              this.showsubject = true;
+            }
           })
           .catch((error) => {
-              console.error("Error submitting order:", error);
+            console.error("Error submitting order:", error);
           });
       } else {
-          alert("Missing fields");
+        alert("Missing fields");
       }
-  }
+    }
+    
   
   },
   computed: {
