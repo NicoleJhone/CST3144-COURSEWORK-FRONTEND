@@ -101,7 +101,6 @@ var webstore = new Vue({
           .then((response) => response.json())
           .then((responseJSON) => {
               console.log("Order response:", responseJSON);
-              document.getElementById("response").innerText = JSON.stringify(responseJSON);
   
               // Update available lesson space
               this.cart.forEach((item) => {
@@ -137,7 +136,6 @@ var webstore = new Vue({
           })
           .catch((error) => {
               console.error("Error submitting order:", error);
-              document.getElementById("error").innerText = error;
           });
       } else {
           alert("Missing fields");
