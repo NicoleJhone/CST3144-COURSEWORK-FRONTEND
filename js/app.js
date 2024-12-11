@@ -81,82 +81,69 @@ var webstore = new Vue({
     //checkout functionality
     saveOrder() {
       if (this.isFormValid()) {
-        const newProduct = {
-          firstName: this.order.firstName,
-          lastName: this.order.lastName,
-          phoneNumber: this.order.phoneNumber,
-          lessonID: this.cart,
-          space: this.cart.length,
-        };
-
-        console.log("Submitting order:", newProduct);
-
-        fetch(
-          "https://cst3144-coursework-express-js.onrender.com/collection/orders",
-          {
-            method: "POST", // set the HTTP method as 'POST'
-            headers: {
-              "Content-Type": "application/json", // set the data type as JSON
-            },
-            body: JSON.stringify(newProduct), // need to stringify the JSON object
-          }
-        )
+          const newProduct = {
+              firstName: this.order.firstName,
+              lastName: this.order.lastName,
+              phoneNumber: this.order.phoneNumber,
+              lessonID: this.cart,
+              space: this.cart.length,
+          };
+  
+          console.log("Submitting order:", newProduct);
+  
+          fetch("https://cst3144-coursework-express-js.onrender.com/collection/orders", {
+              method: "POST", // set the HTTP method as 'POST'
+              headers: {
+                  "Content-Type": "application/json", // set the data type as JSON
+              },
+              body: JSON.stringify(newProduct), // need to stringify the JSON object
+          })
           .then((response) => response.json())
           .then((responseJSON) => {
-            console.log("Order response:", responseJSON);
-            document.getElementById("response").innerText =
-              JSON.stringify(responseJSON);
-
-            // Update available lesson space
-            this.cart.forEach((item) => {
-              console.log("Updating lesson:", item._id);
-              fetch(
-                "https://cst3144-coursework-express-js.onrender.com/collection/lessons/" +
-                  item._id,
-                {
-                  method: "PUT", // set the HTTP method as 'PUT'
-                  headers: {
-                    "Content-Type": "application/json", // set the data type as JSON
-                  },
-                  body: JSON.stringify({
-                    availableSpace: item.availableSpace - 1,
-                  }), // Assuming you want to decrement the space by 1
-                }
-              )
-                .then((response) => response.json())
-                .then((responseJSON) => {
-                  console.log(
-                    "Lesson " + item.title + " updated:",
-                    responseJSON
-                  );
-                })
-                .catch((error) => {
-                  console.error(
-                    "Error updating lesson " + item._id + ":",
-                    error
-                  );
-                });
-            });
-
-            alert("Order has been submitted!");
-            // Clear form fields
-            this.order.firstName = "";
-            this.order.lastName = "";
-            this.order.phoneNumber = "";
-            // Clear cart
-            this.cart = [];
-            if (this.cart.length === 0) {
-              this.showsubject = true;
-            }
+              console.log("Order response:", responseJSON);
+              document.getElementById("response").innerText = JSON.stringify(responseJSON);
+  
+              // Update available lesson space
+              this.cart.forEach((item) => {
+                  console.log("Updating lesson:", item._id);
+                  fetch("https://cst3144-coursework-express-js.onrender.com/collection/lessons/" + item._id, {
+                      method: "PUT", // set the HTTP method as 'PUT'
+                      headers: {
+                          "Content-Type": "application/json", // set the data type as JSON
+                      },
+                      body: JSON.stringify({
+                          availableSpace: item.availableSpace - 1,
+                      }), // Assuming you want to decrement the space by 1
+                  })
+                  .then((response) => response.json())
+                  .then((responseJSON) => {
+                      console.log("Lesson " + item.title + " updated:", responseJSON);
+                  })
+                  .catch((error) => {
+                      console.error("Error updating lesson " + item._id + ":", error);
+                  });
+              });
+  
+              alert("Order has been submitted!");
+              // Clear form fields
+              this.order.firstName = "";
+              this.order.lastName = "";
+              this.order.phoneNumber = "";
+              // Clear cart
+              this.cart = [];
+              if (this.cart.length === 0) {
+                  this.showsubject = true;
+              }
           })
           .catch((error) => {
-            console.error("Error submitting order:", error);
-            document.getElementById("error").innerText = error;
+              console.error("Error submitting order:", error);
+              document.getElementById("error").innerText = error;
           });
       } else {
-        alert("Missing fields");
+          alert("Missing fields");
       }
-    },
+  }
+  
   },
   computed: {
     sortedSubjects() {
