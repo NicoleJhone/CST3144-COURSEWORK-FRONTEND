@@ -20,7 +20,9 @@ var webstore = new Vue({
   created: function () {
     console.log("requesting data from server ...");
 
-    fetch("https://cst3144-coursework-express-js.onrender.com/collection/lessons").then(function (response) {
+    fetch(
+      "https://cst3144-coursework-express-js.onrender.com/collection/lessons"
+    ).then(function (response) {
       response.json().then(function (json) {
         webstore.subjects = json;
         console.log(json);
@@ -84,32 +86,72 @@ var webstore = new Vue({
           lessonID: this.cart,
           space: this.cart.length,
         };
-        fetch("https://cst3144-coursework-express-js.onrender.com/collection/orders", {
-          method: "POST", // set the HTTP method as 'POST'
-          headers: {
-            "Content-Type": "application/json", // set the data type as JSON
-          },
-          body: JSON.stringify(newProduct), // need to stringify the JSON object
-        })
+
+        console.log("Submitting order:", newProduct);
+
+        fetch(
+          "https://cst3144-coursework-express-js.onrender.com/collection/orders",
+          {
+            method: "POST", // set the HTTP method as 'POST'
+            headers: {
+              "Content-Type": "application/json", // set the data type as JSON
+            },
+            body: JSON.stringify(newProduct), // need to stringify the JSON object
+          }
+        )
           .then((response) => response.json())
           .then((responseJSON) => {
+            console.log("Order response:", responseJSON);
             document.getElementById("response").innerText =
               JSON.stringify(responseJSON);
+
+            // Update available lesson space
+            this.cart.forEach((item) => {
+              console.log("Updating lesson:", item._id);
+              fetch(
+                "https://cst3144-coursework-express-js.onrender.com/collection/lessons/" +
+                  item._id,
+                {
+                  method: "PUT", // set the HTTP method as 'PUT'
+                  headers: {
+                    "Content-Type": "application/json", // set the data type as JSON
+                  },
+                  body: JSON.stringify({
+                    availableSpace: item.availableSpace - 1,
+                  }), 
+                }
+              )
+                .then((response) => response.json())
+                .then((responseJSON) => {
+                  console.log(
+                    "Lesson " + item.title + " updated:",
+                    responseJSON
+                  );
+                })
+                .catch((error) => {
+                  console.error(
+                    "Error updating lesson " + item._id + ":",
+                    error
+                  );
+                });
+            });
+
+            alert("Order has been submitted!");
+            // Clear form fields
+            this.order.firstName = "";
+            this.order.lastName = "";
+            this.order.phoneNumber = "";
+            this.order.address = "";
+            // Clear cart
+            this.cart = [];
+            if (this.cart.length === 0) {
+              this.showsubject = true;
+            }
           })
           .catch((error) => {
+            console.error("Error submitting order:", error);
             document.getElementById("error").innerText = error;
           });
-        //clear form fields
-        // this.order.firstName = "";
-        // this.order.lastName = "";
-        // this.order.phoneNumber = "";
-        // this.order.address = "";
-        //clear cart
-        // this.cart = [];
-        // if (this.cart.length === 0) {
-        //   this.showsubject = true;
-        // }
-        alert("Order has been submitted!");
       } else {
         alert("Missing fields");
       }
