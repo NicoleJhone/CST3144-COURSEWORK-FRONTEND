@@ -5,9 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>After School Lessons</title>
+    <!-- Include Vue.js -->
     <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script>
+    <!-- Bootstrap CSS for styling -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -17,63 +20,78 @@
     <div id="app">
         <header>
             <nav class="navbar navbar-expand-lg navbar-custom">
-                <div class="container"> <a class="navbar-brand p-3">
+                <div class="container">
+                    <!-- Site name -->
+                    <a class="navbar-brand p-3">
                         <h3 v-text="sitename" style="color: navy;"></h3>
                     </a>
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav">
-                            <li class="nav-item"> <button v-if="cartItemCount > 0" @click="showCart"> {{ cartItemCount
-                                    }} <i class="fa-solid fa-cart-shopping"></i> Cart </button> <button
-                                    disabled="disabled" v-else> <i class="fa-solid fa-cart-shopping"></i> Cart </button>
+                            <li class="nav-item">
+                                <!-- Cart button with item count -->
+                                <button v-if="cartItemCount > 0" @click="showCart"> {{ cartItemCount }} <i
+                                        class="fa-solid fa-cart-shopping"></i> Cart </button>
+                                <button disabled="disabled" v-else> <i class="fa-solid fa-cart-shopping"></i> Cart
+                                </button>
                             </li>
                         </ul>
                     </div>
                 </div>
             </nav>
         </header>
+
         <main>
             <div class="container">
-                <div v-if="showsubject"> 
-                    <div class="col-sm-4 d-flex p-3" id="sort-bar"> <select name="sortBy" id="select" v-model="sortBy"
-                            class="me-2">
+                <div v-if="showsubject">
+                    <!-- Sorting and search bar -->
+                    <div class="col-sm-4 d-flex p-3" id="sort-bar">
+                        <select name="sortBy" id="select" v-model="sortBy" class="me-2">
                             <option value="subject">Subject</option>
                             <option value="location">Location</option>
                             <option value="price">Price</option>
                             <option value="availability">Availability</option>
-                        </select> 
-                        <button @click="ascending = !ascending" class="sort-button me-2"> <i v-if="ascending"
-                                class="fa fa-sort-up"></i> <i v-else class="fa fa-sort-down"></i>
-                        </button> 
-                        
+                        </select>
+                        <button @click="ascending = !ascending" class="sort-button me-2">
+                            <i v-if="ascending" class="fa fa-sort-up"></i>
+                            <i v-else class="fa fa-sort-down"></i>
+                        </button>
+                        <!-- Search input to filter lessons -->
                         <input class="form-control search-input" type="text" v-model="searchValue"
-                            placeholder="Search.." @input="searchLessons" id="search-input"></input>
+                            placeholder="Search.." @input="searchLessons" id="search-input">
                     </div>
+
+                    <!-- Display lessons -->
                     <div class="container-fluid p-3" style="position: relative;">
                         <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-lg-3 g-3">
                             <div class="col" v-for="subject in sortedSubjects" :key="subject">
                                 <div class="card h-100 shadow-sm">
                                     <figure class="d-flex justify-content-center align-items-center m-2"
-                                        style="height: 200px;"> <img v-bind:src="subject.image" width="200"
-                                            height="200"> </figure>
+                                        style="height: 200px;">
+                                        <img v-bind:src="subject.image" width="200" height="200">
+                                    </figure>
                                     <div class="card-body d-flex flex-column">
+                                        <!-- Lesson details -->
                                         <h3 v-text="subject.title" class="text-center"></h3>
                                         <ul class="list-unstyled">
-                                            <li class="fixed-height"><strong>Location: </strong> {{ subject.location }}
-                                            </li>
-                                            <li class="fixed-height"><strong>Timings: </strong> {{ subject.timings }}
-                                            </li>
-                                            <li class="fixed-height"><strong>Price: </strong>AED {{subject.price}}</li>
-                                            <li class="fixed-height"><strong>Spaces: </strong>{{ subject.availableSpace
-                                                - cartCount(subject)}}</li>
+                                            <li><strong>Location: </strong> {{ subject.location }}</li>
+                                            <li><strong>Timings: </strong> {{ subject.timings }}</li>
+                                            <li><strong>Price: </strong>AED {{ subject.price }}</li>
+                                            <li><strong>Spaces: </strong>{{ subject.availableSpace - cartCount(subject)
+                                                }}</li>
                                         </ul>
-                                        <div class="rating d-flex justify-content-center mt-2"> <span
-                                                v-for="n in subject.rating" :key="n">★</span> <span
-                                                v-for="n in (5 - subject.rating)" :key="n + 5">☆</span> </div>
-                                        <div class="d-flex justify-content-center mt-2"> <button class="btn btn-primary"
-                                                @click="addToCart(subject)"
+                                        <!-- Rating system -->
+                                        <div class="rating d-flex justify-content-center mt-2">
+                                            <span v-for="n in subject.rating" :key="n">★</span>
+                                            <span v-for="n in (5 - subject.rating)" :key="n + 5">☆</span>
+                                        </div>
+                                        <!-- Add to cart button -->
+                                        <div class="d-flex justify-content-center mt-2">
+                                            <button class="btn btn-primary" @click="addToCart(subject)"
                                                 v-if="canAddToCart(subject) && subject.availableSpace > 0">Add to
-                                                cart</button> <button class="btn btn-primary" disabled="disabled"
-                                                v-else>Add to cart</button> </div>
+                                                cart</button>
+                                            <button class="btn btn-primary" disabled="disabled" v-else>Add to
+                                                cart</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -81,33 +99,36 @@
                     </div>
                 </div>
 
+                <!-- Shopping Cart View -->
                 <div class="container my-5" v-else>
                     <div class="row pb-5">
                         <h1 class="text-center mb-5">Shopping Cart</h1>
                         <div class="col-sm-8">
                             <div class="card">
                                 <div class="card-body">
+                                    <!-- Display cart items -->
                                     <div class="container-fluid p-3" style="position: relative;">
                                         <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-lg-3 g-3">
                                             <div class="col" v-for="(item, i) in cart" :key="i">
                                                 <div class="card h-100 shadow-sm">
-                                                    <figure> <img class="card-img" v-bind:src="item.image" width="200"
-                                                            height="200"> </figure>
+                                                    <figure>
+                                                        <img class="card-img" v-bind:src="item.image" width="200"
+                                                            height="200">
+                                                    </figure>
                                                     <div class="card-body d-flex flex-column">
+                                                        <!-- Cart item details -->
                                                         <h3>{{ item.title }}</h3>
                                                         <ul class="list-unstyled">
-                                                            <li class="fixed-height"><strong>Location: </strong> {{
-                                                                item.location }}</li>
-                                                            <li class="fixed-height"><strong>Timings: </strong> {{
-                                                                item.timings }}</li>
-                                                            <li class="fixed-height"><strong>Price: </strong>AED
-                                                                {{item.price}}</li>
-                                                            <li class="fixed-height"><strong>Quantity: </strong>{{
-                                                                item.quantity }}</li>
+                                                            <li><strong>Location: </strong> {{ item.location }}</li>
+                                                            <li><strong>Timings: </strong> {{ item.timings }}</li>
+                                                            <li><strong>Price: </strong>AED {{ item.price }}</li>
+                                                            <li><strong>Quantity: </strong>{{ item.quantity }}</li>
                                                         </ul>
-                                                        <div class="d-flex justify-content-center mt-auto"> <button
-                                                                class="btn btn-danger"
-                                                                @click="removeFromCart(i)">Remove</button> </div>
+                                                        <!-- Remove from cart button -->
+                                                        <div class="d-flex justify-content-center mt-auto">
+                                                            <button class="btn btn-danger"
+                                                                @click="removeFromCart(i)">Remove</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -116,6 +137,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Checkout Form -->
                         <div class="col-sm-4">
                             <div class="card">
                                 <div class="card-body">
@@ -124,8 +147,9 @@
                                     <p><strong>Last Name:</strong><br><input class="form-control search-input"
                                             v-model="order.lastName" /></p>
                                     <p><strong>Phone Number: </strong><br><input class="form-control search-input"
-                                            v-model="order.phoneNumber" /></p> <button class="btn btn-success"
-                                        @click="saveOrder" :disabled="!isFormValid()">Checkout</button>
+                                            v-model="order.phoneNumber" /></p>
+                                    <button class="btn btn-success" @click="saveOrder"
+                                        :disabled="!isFormValid()">Checkout</button>
                                 </div>
                             </div>
                         </div>
@@ -134,6 +158,8 @@
             </div>
         </main>
     </div>
+
+    <!-- Vue.js application script -->
     <script src="js/app.js"></script>
 </body>
 

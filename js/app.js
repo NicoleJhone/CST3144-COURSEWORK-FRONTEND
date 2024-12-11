@@ -1,13 +1,13 @@
 var webstore = new Vue({
   el: "#app",
   data: {
-    sitename: "After School Classes",
-    subjects: [],
-    showsubject: true,
-    sortBy: "subject",
-    ascending: true,
-    searchValue: "",
-    cart: [],
+    sitename: "After School Classes", // Store name
+    subjects: [], // Array to hold lesson data
+    showsubject: true, // Boolean to toggle between subjects and cart
+    sortBy: "subject", // Default sorting criterion
+    ascending: true, // Flag for ascending/descending sorting
+    searchValue: "", // User search input
+    cart: [], // Array to hold items in the cart
     order: {
       firstName: "",
       lastName: "",
@@ -15,43 +15,47 @@ var webstore = new Vue({
       phoneNumber: "",
       lessonID: "",
     },
-    searchValue: "",
   },
   created: function () {
+    // Fetch lessons data when the app is created
     console.log("requesting data from server ...");
 
     fetch(
       "https://cst3144-coursework-express-js.onrender.com/collection/lessons"
     ).then(function (response) {
       response.json().then(function (json) {
-        webstore.subjects = json;
-        console.log(json);
+        webstore.subjects = json; // Store fetched data in subjects
+        console.log(json); // Log fetched data
       });
     });
   },
   methods: {
-    // add to cart button
+    // Add a subject to the cart if space is available
     addToCart(subject) {
       if (this.canAddToCart(subject)) {
-        this.cart.push(subject);
+        this.cart.push(subject); // Add subject to cart
       } else {
-        alert("No more space available for this lesson.");
+        alert("No more space available for this lesson."); // Alert if no space
       }
     },
 
-    //if condition for ATC button
+    // Check if the subject can be added to the cart based on available space
     canAddToCart(subject) {
       const count = this.getCartItemCount(subject);
-      return subject.availableSpace > count;
+      return subject.availableSpace > count; // Return true if space is available
     },
-    // checkout/lesson toggle
+
+    // Toggle between subjects view and cart view
     showCart() {
       this.showsubject = !this.showsubject;
     },
+
+    // Get the count of a specific subject in the cart
     getCartItemCount(subject) {
       return this.cart.filter((item) => item._id === subject._id).length;
     },
-    // cart length count
+
+    // Count the number of times an item appears in the cart
     cartCount(id) {
       let count = 0;
       for (let i = 0; i < this.cart.length; i++) {
@@ -61,24 +65,28 @@ var webstore = new Vue({
       }
       return count;
     },
-    // remove subject from cart
+
+    // Remove a subject from the cart
     removeFromCart(index) {
-      this.cart.splice(index, 1);
+      this.cart.splice(index, 1); // Remove the subject at the specified index
       if (this.cart.length === 0) {
-        this.showsubject = true;
+        this.showsubject = true; // If cart is empty, show subjects
       }
     },
-    // Validate name (letters only)
+
+    // Validate that name contains only letters
     validateName(name) {
       const nameRegex = /^[A-Za-z]+$/;
-      return nameRegex.test(name);
+      return nameRegex.test(name); // Return true if valid name
     },
-    // Validate phone number (numbers only)
+
+    // Validate that phone number contains only numbers
     validatePhoneNumber(phoneNumber) {
       const phoneRegex = /^[0-9]+$/;
-      return phoneRegex.test(phoneNumber);
+      return phoneRegex.test(phoneNumber); // Return true if valid phone number
     },
-    // Check if the form is valid
+
+    // Check if the form is valid by validating name and phone number
     isFormValid() {
       return (
         this.validateName(this.order.firstName) &&
@@ -87,7 +95,7 @@ var webstore = new Vue({
       );
     },
 
-    //checkout functionality
+    // Submit the order if form is valid
     saveOrder() {
       if (this.isFormValid()) {
         const newProduct = {
@@ -107,16 +115,16 @@ var webstore = new Vue({
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(newProduct),
+            body: JSON.stringify(newProduct), // Send order data to the server
           }
         )
           .then((response) => response.json())
           .then((responseJSON) => {
             console.log("Order response:", responseJSON);
 
-            // Update available lesson space
+            // Update the available space for lessons in the cart
             this.cart.forEach((item) => {
-              const quantity = this.getCartItemCount(item); //
+              const quantity = this.getCartItemCount(item); // Get item quantity
               fetch(
                 "https://cst3144-coursework-express-js.onrender.com/collection/lessons/" +
                   item._id,
@@ -126,7 +134,7 @@ var webstore = new Vue({
                     "Content-Type": "application/json",
                   },
                   body: JSON.stringify({
-                    availableSpace: item.availableSpace - quantity,
+                    availableSpace: item.availableSpace - quantity, // Update space
                   }),
                 }
               )
@@ -145,43 +153,45 @@ var webstore = new Vue({
                 });
             });
 
-            alert("Order has been submitted!");
+            alert("Order has been submitted!"); // Alert user that order is submitted
             this.order.firstName = "";
             this.order.lastName = "";
             this.order.phoneNumber = "";
-            this.cart = [];
+            this.cart = []; // Empty the cart after checkout
             if (this.cart.length === 0) {
-              this.showsubject = true;
+              this.showsubject = true; // Show subjects if cart is empty
             }
           })
           .catch((error) => {
             console.error("Error submitting order:", error);
           });
       } else {
-        alert("Missing fields");
+        alert("Missing fields"); // Alert if form validation fails
       }
     },
+
+    // Search for lessons based on the search value
     searchLessons() {
       // If the search term is empty, don't fetch any results
       if (this.searchValue.trim() === "") {
-        this.subjects = [];  // Clear results
+        this.subjects = []; // Clear results if no search term
         return;
       }
-  
+
       // Construct the search URL with query parameters
       let url = `https://cst3144-coursework-express-js.onrender.com/search?q=${this.searchValue}`;
-  
+
       // Fetch data from the backend API
       fetch(url)
-        .then(response => response.json())
-        .then(data => {
+        .then((response) => response.json())
+        .then((data) => {
           this.subjects = data; // Update the lessons with the search results
         })
-        .catch(error => console.error("Error:", error));
-    }
-  
+        .catch((error) => console.error("Error:", error));
+    },
   },
   computed: {
+    // Sort subjects based on selected criteria and direction
     sortedSubjects() {
       let subjectsArray = this.subjects;
 
@@ -221,12 +231,14 @@ var webstore = new Vue({
         }
       }); //sort to asc/desc
       if (!this.ascending) {
-        subjectsArray.reverse();
+        subjectsArray.reverse(); // Reverse the order if descending
       }
       return subjectsArray;
     },
+
+    // Get the total count of items in the cart
     cartItemCount: function () {
-      return this.cart.length;
+      return this.cart.length; // Return the total count of cart items
     },
   },
 });
