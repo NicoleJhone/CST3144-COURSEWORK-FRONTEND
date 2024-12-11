@@ -120,7 +120,7 @@
                                             v-model="order.address" /></p>
                                     <p><strong>Phone Number: </strong><br><input class="form-control search-input"
                                             v-model="order.phoneNumber" /></p> <button class="btn btn-success"
-                                        @click="saveOrder" :disabled="!isFormValid()">Checkout</button>
+                                            v-on:click="saveOrder" :disabled="!isFormValid()">Checkout</button>
                                 </div>
                             </div>
                         </div>
