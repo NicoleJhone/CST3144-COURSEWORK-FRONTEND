@@ -80,7 +80,6 @@ var webstore = new Vue({
 
     //checkout functionality
     saveOrder() {
-      //checks if form is valid
       if (this.isFormValid()) {
           const newProduct = {
               firstName: this.order.firstName,
@@ -103,17 +102,26 @@ var webstore = new Vue({
           .then((responseJSON) => {
               console.log("Order response:", responseJSON);
   
-              // Update available lesson space
-              this.cart.forEach((item) => {
-                  console.log("Updating lesson:", item._id);
+              // counts the quantity of each item in the cart
+              const itemCounts = this.cart.reduce((acc, item) => {
+                  acc[item._id] = (acc[item._id] || 0) + 1;
+                  return acc;
+              }, {});
+  
+              // update available lesson space based on quantity
+              Object.keys(itemCounts).forEach((itemId) => {
+                  const item = this.cart.find((i) => i._id === itemId);
+                  const quantity = itemCounts[itemId];
+                  console.log("Updating lesson:", item._id, "Quantity:", quantity);
+  
                   fetch("https://cst3144-coursework-express-js.onrender.com/collection/lessons/" + item._id, {
                       method: "PUT", // set the HTTP method as 'PUT'
                       headers: {
                           "Content-Type": "application/json", // set the data type as JSON
                       },
                       body: JSON.stringify({
-                          availableSpace: item.availableSpace - 1,
-                      }), 
+                          availableSpace: item.availableSpace - quantity,
+                      }),
                   })
                   .then((response) => response.json())
                   .then((responseJSON) => {
