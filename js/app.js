@@ -1,5 +1,6 @@
 var webstore = new Vue({
   el: "#app",
+
   data: {
     sitename: "After School Classes", // Store name
     subjects: [], // Array to hold lesson data
@@ -16,6 +17,7 @@ var webstore = new Vue({
       lessonID: "",
     },
   },
+
   created: function () {
     // Fetch lessons data when the app is created
     console.log("requesting data from server ...");
@@ -29,6 +31,7 @@ var webstore = new Vue({
       });
     });
   },
+
   methods: {
     // Add a subject to the cart if space is available
     addToCart(subject) {
@@ -172,24 +175,32 @@ var webstore = new Vue({
 
     // Search for lessons based on the search value
     searchLessons() {
-      // If the search term is empty, don't fetch any results
+      // Fetch all lessons if search term is empty
       if (this.searchValue.trim() === "") {
-        this.subjects = []; // Clear results if no search term
+        fetch(
+          "https://cst3144-coursework-express-js.onrender.com/collection/lessons"
+        )
+          .then((response) => response.json())
+          .then((json) => {
+            webstore.subjects = json; // Update subjects with all lessons
+          })
+          .catch((error) =>
+            console.error("Error fetching all lessons:", error)
+          );
         return;
       }
 
-      // Construct the search URL with query parameters
+      // Search lessons based on the query
       let url = `https://cst3144-coursework-express-js.onrender.com/search?q=${this.searchValue}`;
-
-      // Fetch data from the backend API
       fetch(url)
         .then((response) => response.json())
         .then((data) => {
-          this.subjects = data; // Update the lessons with the search results
+          this.subjects = data; // Update subjects with search results
         })
-        .catch((error) => console.error("Error:", error));
+        .catch((error) => console.error("Error searching lessons:", error));
     },
   },
+
   computed: {
     // Sort subjects based on selected criteria and direction
     sortedSubjects() {
