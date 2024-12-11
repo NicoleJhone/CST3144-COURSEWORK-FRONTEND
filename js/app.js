@@ -78,7 +78,7 @@ var webstore = new Vue({
     },
     //checkout functionality
     saveOrder() {
-      if (this.isFormValid() && this.order.address) {
+      if (this.isFormValid()) {
         const newProduct = {
           firstName: this.order.firstName,
           lastName: this.order.lastName,
@@ -141,7 +141,6 @@ var webstore = new Vue({
             this.order.firstName = "";
             this.order.lastName = "";
             this.order.phoneNumber = "";
-            this.order.address = "";
             // Clear cart
             this.cart = [];
             if (this.cart.length === 0) {
