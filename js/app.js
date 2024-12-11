@@ -78,7 +78,7 @@ var webstore = new Vue({
     },
     //checkout functionality
     saveOrder() {
-      if (this.isFormValid() && this.order.address) {
+      if (this.isFormValid()) {
         const newProduct = {
           firstName: this.order.firstName,
           lastName: this.order.lastName,
