@@ -171,10 +171,6 @@ var webstore = new Vue({
       // Construct the search URL with query parameters
       let url = `https://cst3144-coursework-express-js.onrender.com/search?q=${this.searchValue}`;
   
-      // Add sorting and other filters if present
-      if (this.sortBy) url += `&sortBy=${this.sortBy}`;
-      if (!this.ascending) url += `&ascending=false`;
-  
       // Fetch data from the backend API
       fetch(url)
         .then(response => response.json())
