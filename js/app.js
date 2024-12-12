@@ -175,30 +175,31 @@ var webstore = new Vue({
 
     // Search for lessons based on the search value
     searchLessons() {
-      // Fetch all lessons if search term is empty
+      // Fetch all lessons if search input is empty
       if (this.searchValue.trim() === "") {
-        fetch(
-          "https://cst3144-coursework-express-js.onrender.com/collection/lessons"
-        )
+        fetch("https://cst3144-coursework-express-js.onrender.com/collection/lessons")
           .then((response) => response.json())
           .then((json) => {
-            webstore.subjects = json; // Update subjects with all lessons
+            webstore.subjects = json;
           })
-          .catch((error) =>
-            console.error("Error fetching all lessons:", error)
-          );
+          .catch((error) => console.error("Error fetching all lessons:", error));
         return;
       }
-
-      // Search lessons based on the query
+    
+      // Build search URL with query parameters
       let url = `https://cst3144-coursework-express-js.onrender.com/search?q=${this.searchValue}`;
+      if (this.price) url += `&price=${this.price}`;
+      if (this.availableSpace) url += `&availableSpace=${this.availableSpace}`;
+    
+      // Fetch filtered lessons
       fetch(url)
         .then((response) => response.json())
         .then((data) => {
-          this.subjects = data; // Update subjects with search results
+          this.subjects = data;
         })
         .catch((error) => console.error("Error searching lessons:", error));
-    },
+    }
+    
   },
 
   computed: {
